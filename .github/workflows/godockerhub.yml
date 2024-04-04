@@ -18,3 +18,26 @@ jobs:
           go-version: 1.15
       - name: Build
         run: go build -v ./...
+
+      #DOCKER HUB에 이미지를 만들어서 배포
+
+      #도커허브에 로그인 
+      #password는 절대 하드 코딩해서는 안됨
+      - name: Login to DockerHub
+        uses: docker/login-action@v1
+        with: 
+         username: ${{secrets.DOCKERHUB_USERNAME}}
+         password: ${{secrets.DOCKERHUB_TOKEN}}
+
+
+      #이미지를 빌드하고 도커 허브에 배포
+      - name: build and release to DockerHub
+        env:
+          NAME: 2miinjeong
+          REPO: godockerhub
+        run:
+         docker build -t $REPO .
+         docker tag $REPO:latest $NAME/%REPO:latest
+         docker push $NAME/$REPO:latest
+
+
