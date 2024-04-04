@@ -1,18 +1,18 @@
-name: GODOCKERHUB
+name: Go
 
 on:
   push:
-    branches: ["main"]
+    branches: [ "main" ]
   pull_request:
-    branches: ["main"]
+    branches: [ "main" ]
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-latest  
+    #GO 인 경우 - python으로 언어를 변경하면 이 부분을 수정하면 됩니다. 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
-      - name: Setup Go
+      - uses: actions/checkout@v3      
+      - name: Set up Go
         uses: actions/setup-go@v3
         with:
           go-version: 1.15
@@ -21,23 +21,20 @@ jobs:
 
       #DOCKER HUB에 이미지를 만들어서 배포
 
-      #도커허브에 로그인 
-      #password는 절대 하드 코딩해서는 안됨
+      #도커 허브 로그인
+      #password는 절대로 하드 코딩 하면 안됩니다.
       - name: Login to DockerHub
         uses: docker/login-action@v1
-        with: 
-         username: ${{secrets.DOCKERHUB_USERNAME}}
-         password: ${{secrets.DOCKERHUB_TOKEN}}
-
-
+        with:
+          username: ${{secrets.DOCKERHUB_USERNAME}}
+          password: ${{secrets.DOCKERHUB_TOKEN}}
+      
       #이미지를 빌드하고 도커 허브에 배포
       - name: build and release to DockerHub
         env:
           NAME: 2miinjeong
           REPO: godockerhub
         run: |
-         docker build -t $REPO .
-         docker tag $REPO:latest $NAME/%REPO:latest
-         docker push $NAME/$REPO:latest
-
-
+          docker build -t $REPO .
+          docker tag $REPO:latest $NAME/$REPO:latest
+          docker push $NAME/$REPO:latest
