@@ -9,6 +9,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    #go 인 경우 아래와 같고, python인 경우는 이 부분을 수정하면 됨. 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
